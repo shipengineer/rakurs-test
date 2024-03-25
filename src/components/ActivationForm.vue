@@ -2,17 +2,17 @@
     <div class="form">
         <p class="form__thx"> Спасибо за установку!</p>
         <p class="form__lastStep">Остался последний шаг</p>
-        <form onsubmit="submitHandler" class="activation">
+        <form  class="activation" >
             <h3 class="activation__title">Активация тестового доступа</h3>
             <p class="activation__condition">Для активации 14-дневного тестового доступа заполните форму ниже.</p>
             <p class="activation__attention"> 
                 <strong>Внимание!</strong> В целях безопасности обслуживание будет осуществляться только по указанному номеру телефона. </p>
             
-            <PhonePickHelper/>
-            <input class="activation__userName" type="text" v-model = 'userName' placeholder="Как к Вам обращаться?*">
+            <PhonePickHelper @input-phone="setPhone" :class="{error:errorPhone}" />
+            <input class="activation__userName" @focus='(e)=>e.target.classList.remove("error")' type="text" v-model = 'userName' ref="nameToSend" placeholder="Как к Вам обращаться?*">
             
-            <select class="activation__userStatus" type="select" v-model = 'userStatus' >
-                <option disabled hidden value="null">Ваша роль в компании?*</option>
+            <select class="activation__userStatus" @focus='(e)=>e.target.classList.remove("error")' type="select" ref="statusToSend" v-model = 'userStatus' >
+            <option disabled hidden  value="null">Ваша роль в компании?*</option>
             <option  value="owner">Собственник</option>
             <option value="head-of-sales">Руководитель отдела продаж</option>
             <option value="technician">Технический специалист</option>
@@ -33,7 +33,9 @@
         <button class="activation__submitButton" @click="sendForm">Активировать доступ</button>
         <p class="activation__questions">Есть вопросы? <a href="mailto::example@email.com">Напишите нам!</a></p>
     </form>
-   
+    <div class="send" :class="{hide:isHide}">
+        Данные успешно отправлены
+    </div>
     </div>
 </template>
 <script>
@@ -44,6 +46,7 @@ export default{
         PhonePickHelper,
        
     },
+    
     data(){
         return {
             userName:'',
@@ -51,8 +54,10 @@ export default{
             promoCheck:false,
             freeHelp:true,
             promoText:'',
-            
-
+            phoneNumber:'',
+            errorPhone:false,
+            fetchError:'',
+            isHide:true
         }
     },
     methods:{
@@ -62,14 +67,84 @@ export default{
                setTimeout(()=>this.$refs.promoInputText.focus(),100)
         
     },
-    sendForm(e){
+    setPhone(payload){
+        this.errorPhone=false
+        this.phoneNumber=payload
+    },
+    async sendForm(e){
         e.preventDefault()
+        if(this.userName.trim()==''){
+            this.$refs.nameToSend.classList.add('error')
+            
+        }
+        if(this.userStatus=='null'){
+            this.$refs.statusToSend.classList.add('error')
+        }
+        if(this.phoneNumber.trim().length<11)
+        {
+            this.errorPhone=true
+        }
+       if(this.userName.trim()==''||this.userStatus=='null'||this.phoneNumber.trim().length<11){
+        return
+       }
+       this.isHide=false
+       setTimeout(()=>{this.isHide=true},4000)
+      //Если все удачно, отправляем данные на сервер
+      //Можно мокнуть jest
+      /*
+       fetch( 'someURl', {
+    method: 'POST',
+    headers: {
+        'Authorization': this.token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify( {phone:this.phoneNumber,name:this.userName,status:this.userStatus,isHelp:this.freeHelp,isPromo:this.promoCheck,promoCode:this.promoText} )
+} )
+.then( function( response ){
+    if( response.status != 201 ){
+        this.fetchError = response.status;
+    }else{
+        response.json().then( function( data ){
+            this.fetchResponse = data;
+        }.bind(this));
     }
+}.bind(this));
+
+*/
+}
 
 }
 }
 </script>
 <style lang="scss">
+.send{
+    width: 250px;
+    height: 250px;
+    background-color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 70%;
+    right: 40%;
+    opacity: 1;
+    transition: 2s;
+}
+.hide{
+    width: 250px;
+    height: 250px;
+    background-color: grey;
+    position: absolute;
+    top: -50%;
+    right: 40%;
+    opacity: 0;
+    transition: 2s;
+    
+}
+.error{
+    border:1px solid #eb5757;
+}
 .checked{
     font-weight: 600;
 }

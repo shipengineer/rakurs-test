@@ -11,9 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import FormLayout from '@/layouts/FormLayout.vue'
 @Component({
   components: {
-    FormLayout,
-    
-    
+    FormLayout,  
   },
 })
 export default class App extends Vue {}

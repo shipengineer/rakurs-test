@@ -12,9 +12,9 @@
     :showNameInput="false"
     :showNotSelectedOption="true"
     class="countryDropDown"></VueCountryDropDown>
-    <input v-if="showInput" type="text" ref="inputPhone" v-model="dialNumber" v-mask="'(___) ___ __ __'"
+    <input v-if="showInput" type="text" ref="inputPhone" v-on:input="inputPhoneHandler" v-model="dialNumber" v-mask="'(___) ___ __ __'"
     placeholder="Введите номер телефона" class="phoneNumber" >
-    <div v-else @click="showHandler" class="phoneNumber">Введите номер телефона*</div>
+    <div v-else @click="showHandler" ref="inputPhonePlaceholder" class="phoneNumber">Введите номер телефона*</div>
     </div>
 </template>
 <script >
@@ -31,10 +31,11 @@ export default{
             dialNumber:''
         }
     },
+    emit:['input-phone'],
     computed:{
         formatedDialNumber:function(){
             
-return this.dialNumber.replace(/[(,),\s,_]+/g,'').slice(0,10)
+return this.dialCode+this.dialNumber.replace(/[(,),\s,_]+/g,'').slice(0,10)
         }
     },
     methods:{
@@ -44,6 +45,19 @@ return this.dialNumber.replace(/[(,),\s,_]+/g,'').slice(0,10)
         showHandler(){
             this.showInput = true;
             setTimeout(()=>this.$refs.inputPhone.focus(),100)
+        },
+        inputPhoneHandler(){
+          if(this.formatedDialNumber.trim().length==11)
+        {
+            this.$refs.inputPhone?.classList.remove('error')
+            this.$refs.inputPhonePlaceholder?.classList.remove('error')
+        }
+          if(this.formatedDialNumber.trim().length<11)
+        {
+            this.$refs.inputPhone?.classList.add('error')
+            this.$refs.inputPhonePlaceholder?.classList.add('error')
+        }
+          this.$emit('input-phone',this.formatedDialNumber)
         }
     },
     components:{VueCountryDropDown},
@@ -111,9 +125,8 @@ return this.dialNumber.replace(/[(,),\s,_]+/g,'').slice(0,10)
               el.value = '_' + el.value
             }
           })
-          el.addEventListener('input', function(event){
-               
-            maskIt()
+          el.addEventListener('input', function(){
+               maskIt()
           })
         }
     }
