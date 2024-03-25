@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" >
    <FormLayout>
-    <ActivationForm/>
+    
    </FormLayout>
   </div>
 </template>
@@ -9,11 +9,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import FormLayout from '@/layouts/FormLayout.vue'
-import ActivationForm from '@/components/ActivationForm.vue'
 @Component({
   components: {
     FormLayout,
-    ActivationForm
+    
     
   },
 })
@@ -21,5 +20,9 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
+@import '@/assets/defaultStyles.scss';
 
+#app{
+  font-family: var(--font-family)
+}
 </style>

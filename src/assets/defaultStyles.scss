@@ -1,0 +1,100 @@
+$default-color: #17505b;
+$disable-color: #8ba8ad;
+$active-color: #124049;
+$hover-color: #5d858d;
+$text-color: #303133;
+$error-color: #eb5757;
+$button-text-color: #e8eeef;
+$disabled-background-color: #e4e7ed;
+$default-border-color: #dcdfe6;
+$select-default-color: #c0c4cc;
+$select-filled-color: #606266;
+$option-hover-color: #f5f7fa;
+$link-hover-color: #45737c;
+:root {
+  --font-family: 'Roboto', sans-serif;
+  --second-family: 'Verdana', sans-serif;
+  --third-family: 'Arial', sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+h3 {
+  margin: 0;
+}
+button {
+  color: $button-text-color;
+  border-radius: 4px;
+  padding: 8px;
+  width: 114px;
+  height: 40px;
+  background-color: $default-color;
+  &:hover {
+    background-color: $hover-color;
+  }
+  &:disabled {
+    background-color: $disable-color;
+  }
+  &:active {
+    background-color: $active-color;
+  }
+}
+input[type='text'],
+.phoneNumber {
+  font-size: 14px;
+  color: $disable-color;
+  border: 1px solid $default-border-color;
+  border-radius: 4px;
+  padding: 13px 15px;
+  &:focus {
+    border: 1px solid $default-color;
+    color: $text-color;
+  }
+  &:disabled {
+    border-color: $disable-color;
+    background-color: $disabled-background-color;
+  }
+  &::placeholder {
+    color: lightgrey;
+  }
+  &.error {
+    border-color: $error-color;
+  }
+}
+select {
+  border: 1px solid $default-border-color;
+  border-radius: 4px;
+  padding: 8px 10px;
+  color: $select-default-color;
+  &:visited {
+    color: $select-filled-color;
+  }
+  &:disabled {
+    color: $select-default-color;
+    background-color: $disabled-background-color;
+  }
+  &:focus {
+    color: $select-default-color;
+    border-color: $default-color;
+  }
+  &.error {
+    border-color: $error-color;
+  }
+}
+option {
+  color: black;
+  padding: 9px 10px;
+  &:hover {
+    box-shadow: 0 0 10px 10px $option-hover-color inset;
+  }
+}
+a {
+  font-weight: 500;
+  font-size: 14px;
+  color: $default-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    color: $link-hover-color;
+  }
+}
